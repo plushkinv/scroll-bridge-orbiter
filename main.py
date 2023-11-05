@@ -45,6 +45,13 @@ for private_key in keys_list:
         balance = web3.eth.get_balance(wallet)
         balance_decimal = Web3.from_wei(balance, 'ether')        
 
+        if balance_decimal < config.minimal_need_balance:
+            log("Недостаточно эфира.  жду когда пополнишь. на следующем круге попробую снова")
+            fun.save_wallet_to("no_money_wa", wallet)
+            keys_list.append(private_key)            
+            timeOut("teh")
+            continue 
+
         while True:
             gasPrice = web3.eth.gas_price
             gasPrice_Gwei = Web3.from_wei(gasPrice, 'Gwei')
@@ -83,7 +90,7 @@ for private_key in keys_list:
         print(f"komissia моста = {Web3.from_wei(komissia_mosta, 'ether')}")
         print(f"получим на выходе = {Web3.from_wei(amount, 'ether')}")
 
-        if balance_decimal < config.minimal_need_balance or balance < value + komissia:
+        if balance < value + komissia:
             log("Недостаточно эфира.  жду когда пополнишь. на следующем круге попробую снова")
             fun.save_wallet_to("no_money_wa", wallet)
             keys_list.append(private_key)            
